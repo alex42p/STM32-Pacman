@@ -21,8 +21,8 @@ Our project aims to use the STM to construct timer and game logic to create an i
 
 
 # Additional Parts Purchased:
-- **Joystick:** https://nam04.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.adafruit.com%2Fproduct%2F512&data=05%7C02%7Cmehta295%40purdue.edu%7Ca02189e7d93e4299a28c08dd55d2c002%7C4130bd397c53419cb1e58758d6d63f21%7C0%7C0%7C638761085843781052%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=BsiAAMqPYT3qgTyyWpZ5JxV0d3g3xbroM4o6UWwSwKA%3D&reserved=0
-- **LED Matrix Display:** https://nam04.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.adafruit.com%2Fproduct%2F2278&data=05%7C02%7Cmehta295%40purdue.edu%7Ca02189e7d93e4299a28c08dd55d2c002%7C4130bd397c53419cb1e58758d6d63f21%7C0%7C0%7C638761085843797849%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=29kGtGGOcy9DcFBA68U0BwolFBkDP9z3qVx1mVtx0SQ%3D&reserved=0
+- **Joystick:** https://www.adafruit.com/product/512
+- **LED Matrix Display:** https://www.amazon.com/Hosyond-480x320-Display-ST7796S-Mega2560/dp/B0CKRJ81B5/ref=sr_1_1?crid=1ST5MB8NX70D3&dib=eyJ2IjoiMSJ9.9_H0RcgrtppgcTbIWwExv57hfGkcPeeQ3T0MnVNR3P2la-cKTf2LYsCFiqmndMRRjIPYc2nDDuhXhu8N1VnMxlHhaMQyL9iLthSmvIdLHElMWajqi0ORILloGOBHhwypZIWRTBJOzlyLL7RndUHG1Q90W4bGAjfRKLVNxKblh5NEBgyYvV2OSZZ4L7g_QScwuNYd48UTZ8WtWLRmSLjtwRMf425JnK4RoKNRdPNjkP8.RQdPMFH3z6R9SFm-ch7J3832RwceFbxkPuje7sl0_54&dib_tag=se&keywords=lcd%2Bdisplay%2Bmodule%2Bspi&qid=1740693811&sprefix=lcd%2Bdisplay%2Bmodule%2Bspi%2Caps%2C128&sr=8-1&th=1
 
                
 # External Interfaces
@@ -59,10 +59,10 @@ Our project aims to use the STM to construct timer and game logic to create an i
                
 # Related Projects 
 ### 1)
-- https://nam04.safelinks.protection.outlook.com/?url=https%3A%2F%2Fyoutu.be%2F6ignbWBmfMw%3Fsi%3D6gDJAv2SGLOrzNAZ&data=05%7C02%7Cmehta295%40purdue.edu%7Ca02189e7d93e4299a28c08dd55d2c002%7C4130bd397c53419cb1e58758d6d63f21%7C0%7C0%7C638761085843805914%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=nIVh%2BXzIgfqoAA7mZKp3fIYqJuDzHvJHBx4IVUecwKM%3D&reserved=0
+- https://youtu.be/6ignbWBmfMw?si=6gDJAv2SGLOrzNAZ
 - This project is using an SD Card to import the game logic. We could do something like this. We also really like the PCB in this game, as it replicates a video game control very well.
 ### 2)
-- https://nam04.safelinks.protection.outlook.com/?url=https%3A%2F%2Fyoutu.be%2Fy5O8JRKy1tI%3Fsi%3Dvzc-N45uXxTNpEd1&data=05%7C02%7Cmehta295%40purdue.edu%7Ca02189e7d93e4299a28c08dd55d2c002%7C4130bd397c53419cb1e58758d6d63f21%7C0%7C0%7C638761085843814007%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=y6YyciqFMqNrXo0pWfBfyZ3wD1ukze1GAzeSOQeLP%2F8%3D&reserved=0
+- https://youtu.be/y5O8JRKy1tI?si=vzc-N45uXxTNpEd1
 - This is a great walkthrough of a project that closely resembles what we want to do with our game.
 
 ### What makes our project different
