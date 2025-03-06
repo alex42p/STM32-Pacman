@@ -1,0 +1,33 @@
+func display_score(int current score) { - Aahan
+    takes in an integer
+    add code to display this integer on the OLED display
+    use a SPI to implement this 
+}
+
+func joystick_pos() { - Omkar
+    read and return the current input from the joystick
+}
+
+func convert_joystick_ADC() { - Omkar
+    probably a 2:4 decoder to read in 2-axis and send [0,1] for (x,y)
+}
+
+func mp3_to_dac() { - Zoey
+    send audio from mp3 file(s) to the speaker through DAC
+}
+
+func read_HS_data() { - Alex
+    open high score data from EEPROM
+}
+
+func write_HS_data() { - Alex
+    write high score data to EEPROM
+}
+
+func read_rows(), drive_cols() for keypad->OLED - Zoey
+
+
+
+
+GAME LOGIC:
+func pac_movement_logic(), ghost_movement_logic(), sync_audio(), update_score(), others TBD as of 3/6/25
