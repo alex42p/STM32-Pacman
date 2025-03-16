@@ -28,6 +28,5 @@ func read_rows(), drive_cols() for keypad->OLED - Zoey
 
 
 
-
 GAME LOGIC:
 func pac_movement_logic(), ghost_movement_logic(), sync_audio(), update_score(), others TBD as of 3/6/25
