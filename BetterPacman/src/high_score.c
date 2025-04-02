@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include "stm32f0xx.h"
 #include "high_score.h"
 
 /**
@@ -76,4 +77,12 @@ void insert(High_score** head, const char* name, int score, int place) {
         curr->next = new_node;
         
     }
+}
+
+void setup_i2c() {
+    I2C1->CR1 &= ~I2C_CR1_PE; // clear enable bit while setting up i2c
+    // figure out the rest of the necessary bits to enable to 
+    // transfer high score linked list data to the TFT-LCD display
+    /** refer to  */
+    I2C1->CR1 |= I2C_CR1_PE; // enable I2C after setting up data transfer process
 }
