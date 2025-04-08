@@ -1,9 +1,9 @@
 /**
  * 
- * File: i2c.c
- * Author: Alex Piet
+ * @file: i2c.c
+ * @author: Alex Piet
  * 
- * Description: 
+ * @description: 
  *      This file holds all of the code necessary to implement the read and 
  *      write functionality for the purpose of creating a leaderboard to be 
  *      displayed on the high score screen of Team 10's "Better Pacman" game.
@@ -33,15 +33,16 @@ High_score* read_high_score_data() {
 
     High_score* head = NULL;
     char line[MAX_LINE_LENGTH];
-    int place = 1;
+    int placement = 1;
     while (fgets(line, MAX_LINE_LENGTH, file) != NULL) {
-        if (place > 10) break; // prevent reading >10 scores from text file
+        if (placement > 10) break; // prevent reading >10 scores from text file
         // process each line and add (names, scores) to list of high_score structs
         line[strcspn(line, "\n")] = '\0';
-        char name[4]; // may need to change to 4 for '\0'?
+        char name[4]; // 3 initials + '\0'
         int score;
         sscanf(line, "%3s,%d", name, &score); // read (3 chars, score)
-        insert(&head, name, score, place++);
+        name[4] = '\0'; // add null terminator after reading player's initials
+        insert(&head, name, score);
     }
     fclose(file);
 
@@ -65,11 +66,11 @@ void write_high_score_data(High_score* scores) {
     return;
 }
 
-void insert(High_score** head, const char* name, int score, int place) {
+void insert(High_score** head, const char* name, int score) {
     High_score* new_node = malloc(sizeof(High_score));
     strcpy(new_node->name, name);
     new_node->score = score;
-    new_node->placement = 0; // update later
+    // new_node->placement = 0; // update later
     new_node->next = NULL;
 
     // if empty list or new score > top score, update head of list
@@ -83,7 +84,7 @@ void insert(High_score** head, const char* name, int score, int place) {
             curr = curr->next;
         }
         new_node->next = curr->next;
-        new_node->placement = place;
+        // new_node->placement = place;
         curr->next = new_node;
         
     }
