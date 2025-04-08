@@ -1,3 +1,6 @@
+#ifndef high_scoreh
+#define high_scoreh 1
+
 /** Dictionary structured linked list for storing top 10 high scores */
 typedef struct High_score {
     char name[4]; // player name, limit to 3 initials (+'\0') for now
@@ -28,3 +31,6 @@ void write_high_score_data(High_score* scores);
  * @param place Player's placement on the leaderboard
  */
 void insert(High_score** head, const char* name, int score, int place);
+
+
+#endif /* high_scoreh */
