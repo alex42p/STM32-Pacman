@@ -28,7 +28,7 @@ High_score* read_high_score_data() {
         if (place > 10) break; // prevent reading >10 scores from text file
         // process each line and add (names, scores) to list of high_score structs
         line[strcspn(line, "\n")] = '\0';
-        char name[3];
+        char name[4]; // may need to change to 4 for '\0'?
         int score;
         sscanf(line, "%3s,%d", name, &score); // read (3 chars, score)
         insert(&head, name, score, place++);
@@ -83,6 +83,7 @@ void setup_i2c() {
     I2C1->CR1 &= ~I2C_CR1_PE; // clear enable bit while setting up i2c
     // figure out the rest of the necessary bits to enable to 
     // transfer high score linked list data to the TFT-LCD display
-    /** refer to  */
+    
+    /** refer to i2c lab to see example of using i2c to transfer data */
     I2C1->CR1 |= I2C_CR1_PE; // enable I2C after setting up data transfer process
 }
