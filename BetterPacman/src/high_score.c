@@ -80,10 +80,96 @@ void insert(High_score** head, const char* name, int score, int place) {
 }
 
 void setup_i2c() {
-    I2C1->CR1 &= ~I2C_CR1_PE; // clear enable bit while setting up i2c
-    // figure out the rest of the necessary bits to enable to 
     // transfer high score linked list data to the TFT-LCD display
-    
     /** refer to i2c lab to see example of using i2c to transfer data */
+
+    /** SETUP STEPS: */
+
+    /** Enable Ports */
+    // Enable the peripheral clock for the GPIOx bus for the pins for I2C1 SCL and SDA.
+    // Configure the pins for the I2C1 alternate function.
+    
+    /** Init I2C */
+    // enable the clock
+    I2C1->CR1 &= ~I2C_CR1_PE; // clear enable bit while setting up i2c
+    // Turn OFF the analog noise filter.
+    // Turn ON the error interrupts enable.
+    // Disable clock stretching.
+    // To configure the I2C for 400 kHz "Fast Mode" transmission, we need to set TIMINGR register fields to specific values.
+    // With internal_clock(), our STM32 clock frequency is 48 MHz.
+    // The STM32 Reference Manual has a table that shows the values for the TIMINGR register for different examples of I2C speeds for different clock frequencies.
+    // The timings settings assumes a I2CCLK of 8 MHz, so you will need to adjust the PRESC field to divide the clock down from 48 MHz accordingly.
+    // You want to set the I2C speed to 400 kHz "Fast Mode", so you will need to adjust the SCLL, SCLH, SDADEL and SCLDEL respectively.
+    // 100 kHz "Standard Mode" would work too. Always check the datasheet for the device you are communicating with to see what speeds it supports.
+    // Configure I2C1 to be in 7-bit addressing mode, and not 10-bit addressing mode.
+    // Finally, enable the I2C1 peripheral.
+
+
+    
     I2C1->CR1 |= I2C_CR1_PE; // enable I2C after setting up data transfer process
+}
+
+void i2c_start(uint8_t targadr, int size, bool dir) {
+    // 0. Take current contents of CR2 register. 
+    uint32_t tmpreg = I2C1->CR2;
+
+    // 1. Clear the following bits in the tmpreg: SADD, NBYTES, RD_WRN, START, STOP
+
+    // 2. Set read/write direction in tmpreg.
+
+    // 3. Set the target's address in SADD (shift targadr left by 1 bit) and the data size.
+    tmpreg |= ((targadr<<1) & I2C_CR2_SADD) | ((size << 16) & I2C_CR2_NBYTES);
+
+    // 4. Set the START bit.
+    tmpreg |= I2C_CR2_START;
+
+    // 5. Start the conversion by writing the modified value back to the CR2 register.
+    I2C1->CR2 = tmpreg;
+}
+
+void i2c_stop() {
+    // 0. If a STOP bit has already been sent, return from the function.
+    // Check the I2C1 ISR register for the corresponding bit.
+
+    // 1. Set the STOP bit in the CR2 register.
+
+    // 2. Wait until STOPF flag is reset by checking the same flag in ISR.
+
+    // 3. Clear the STOPF flag by writing 1 to the corresponding bit in the ICR.
+}
+
+void i2c_idle() {
+    int count = 0;
+    while ((I2C1->ISR & I2C_ISR_TXIS) == 0) {
+        count += 1;
+        if (count > 1000000)
+            return -1;
+        if (i2c_checknack()) {
+            i2c_clearnack();
+            i2c_stop();
+            return -1;
+        }
+    }
+}
+
+void i2c_recvdata() {
+    int count = 0;
+    while ((I2C1->ISR & I2C_ISR_RXNE) == 0) {
+        count += 1;
+        if (count > 1000000)
+            return -1;
+        if (i2c_checknack()) {
+            i2c_clearnack();
+            i2c_stop();
+            return -1;
+        }
+    }
+}
+
+int i2c_checknack() {
+    return 1;
+}
+
+void i2c_clearnack() {
+
 }
