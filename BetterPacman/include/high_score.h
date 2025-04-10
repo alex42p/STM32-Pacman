@@ -4,8 +4,9 @@
  * @author: Alex Piet
  * 
  * @description: 
- *      Holds declarations for all read/write functions necessary
- *      to create a leaderboard for Team 10's "Better Pacman" game.
+ *      Holds declarations for all read/write and helper functions 
+ *      necessary to create and store a leaderboard for Team 10's 
+ *      "Better Pacman" game.
  * 
  */
 
