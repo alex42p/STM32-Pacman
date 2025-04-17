@@ -17,13 +17,15 @@
  * - Add descriptions to i2c function declarations
  */
 
+void internal_clock();
 void enable_i2c_ports();
-void setup_i2c();
-void i2c_start(uint8_t targadr, int size, bool dir);
+void init_i2c();
+void i2c_start(uint32_t targadr, uint8_t size, uint8_t dir);
 void i2c_stop();
-void i2c_idle();
-int i2c_recvdata(); 
+void i2c_waitidle();
+int i2c_senddata(uint8_t targadr, uint8_t data[], uint8_t size);
+int i2c_recvdata(uint8_t targadr, void *data, uint8_t size);
 int i2c_checknack();
-int i2c_clearnack();
+void i2c_clearnack();
 
 #endif /* _I2C_H_ */
