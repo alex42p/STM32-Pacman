@@ -11,18 +11,8 @@
  * 
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include "stm32f0xx.h"
 #include "i2c.h"
-
-/**
- * TODO:
- * - Add necessary additions to display leaderboard somewhere 
- */
-
+#include "high_score.h"
 
 
 //===========================================================================
@@ -104,11 +94,6 @@ void i2c_stop(void) {
 // Wait until the I2C bus is not busy. (One-liner!)
 //===========================================================================
 void i2c_waitidle(void) {
-    // int temp = 1;
-    // while (I2C1->ISR & I2C_ISR_BUSY) {
-    //     temp = I2C1->ISR & I2C_ISR_BUSY;
-    //     if (temp == 0) break;
-    // } // while BUSY, wait
     while (I2C1->ISR & I2C_ISR_BUSY); // while BUSY, wait
 }
 
@@ -131,7 +116,7 @@ int i2c_senddata(uint8_t targadr, uint8_t data[], uint8_t size) {
                 return -1;
             }
         }
-        data[i] &= I2C_TXDR_TXDATA; // mask data[i] with 0xFF to ensure only 8 bits long
+        // data[i] &= I2C_TXDR_TXDATA; // mask data[i] with 0xFF to ensure only 8 bits long
         I2C1->TXDR = data[i];
     }
 
@@ -140,6 +125,7 @@ int i2c_senddata(uint8_t targadr, uint8_t data[], uint8_t size) {
 
     if (!(I2C1->ISR & I2C_ISR_NACKF) == 0) return -1; // target device did not acknowledge the data
     i2c_stop();
+
     return EXIT_SUCCESS; // 0
 }
 
@@ -184,8 +170,7 @@ int i2c_checknack(void) {
 
 //===========================================================================
 // EEPROM functions
-// We'll give these so you don't have to figure out how to write to the EEPROM.
-// These can differ by device.
+//===========================================================================
 
 #define EEPROM_ADDR 0x57
 
@@ -206,16 +191,6 @@ void eeprom_read(uint16_t loc, char data[], uint8_t len) {
     i2c_senddata(EEPROM_ADDR, bytes, 2);
     i2c_recvdata(EEPROM_ADDR, data, len);
 }
-
-//===========================================================================
-// Copy in code from Lab 7 - USART
-//===========================================================================
-
-#include "fifo.h"
-#include "tty.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #define FIFOSIZE 16
 char serfifo[FIFOSIZE];
@@ -326,154 +301,79 @@ void USART3_8_IRQHandler(void) {
     }
 }
 
-//===========================================================================
-// Command functions for the shell
-// These are the functions that are called when a command is entered, in 
-// order to parse the command being entered, split into argc/argv calling 
-// convention, and then execute the command by calling the respective 
-// function.  We implement "write" and "read" for you to easily test your 
-// EEPROM functions from a terminal.
-//===========================================================================
-
-void write(int argc, char* argv[]) {
-    if (argc < 3) {
-        printf("Usage: write <addr> <data>\n");
-        printf("Ensure the address is a hexadecimal number.  No need to include 0x.\n");
-        return;
-    }
-    uint32_t addr = atoi(argv[1]); 
-    // concatenate all args from argv[2], until empty string is found, to a string
-    char data[32] = "";
+void save_high_scores_to_eeprom(High_score* head) {
     int i = 0;
-    int j = 2;
-    while (strcmp(argv[j], "") != 0 && i < 32) {
-        for (char c = argv[j][0]; c != '\0'; c = *(++argv[j])) {
-            data[i++] = c;
+    High_score* curr = head;
+    while (curr != NULL) {
+        uint16_t addr = i * 32;
+        uint8_t buffer[7];
+
+        // copy name over
+        buffer[0] = curr->name[0];
+        buffer[1] = curr->name[1];
+        buffer[2] = curr->name[2];
+        
+        // copy score over
+        buffer[3] = (curr->score >> 0) & 0xFF;
+        buffer[4] = (curr->score >> 8) & 0xFF;
+        buffer[5] = (curr->score >> 16) & 0xFF;
+        buffer[6] = (curr->score >> 24) & 0xFF;
+
+        uint8_t len = sizeof(buffer);
+        eeprom_write(addr, (char*)buffer, len);
+        
+        // DEBUG PRINT - DO NOT REMOVE OR CODE WILL BREAK!!!!!
+        fprintf(stdout, "Writing to EEPROM @ 0x%04X: Name='%c%c%c', Score=%lu => Bytes: [%02X %02X %02X %02X %02X %02X %02X]\n",
+            addr,
+            curr->name[0], curr->name[1], curr->name[2],
+            curr->score, // (uint32_t)curr->score,
+            buffer[0], buffer[1], buffer[2], buffer[3], buffer[4], buffer[5], buffer[6]);
+        //
+        addr += len;
+        curr = curr->next;
+        i++;
+    }
+}
+
+High_score* load_high_scores_from_eeprom() {
+    High_score* head = NULL;
+    High_score* tail = NULL;
+    uint8_t buffer[7];    
+
+    for (int i = 0; i < NUM_HIGH_SCORES; i++) {
+        uint16_t addr = i * EEPROM_PAGE_SIZE;        
+        eeprom_read(addr, (char*)buffer, sizeof(buffer));
+
+
+        High_score* node = malloc(sizeof(High_score));
+        if (!node) {
+            printf("Malloc error with entry %d: %s\n", i, strerror(errno));
+            break; // error allocating memory
         }
-        if (strcmp(argv[j+1], "") != 0)
-            data[i++] = ' ';
-        else {
-            data[i + 1] = '\0';
+
+        // copy name
+        node->name[0] = buffer[0];
+        node->name[1] = buffer[1];
+        node->name[2] = buffer[2];
+        node->name[3] = '\0';
+        
+        // copy score
+        node->score  = ((uint32_t)buffer[3] << 0);
+        node->score |= ((uint32_t)buffer[4] << 8);
+        node->score |= ((uint32_t)buffer[5] << 16);
+        node->score |= ((uint32_t)buffer[6] << 24);
+        
+        node->next = NULL;
+
+        // if empty list, set head to new node
+        if (head == NULL) {
+            head = node;
+            tail = node;
+        } else { // otherwise append to end
+            tail->next = node;
+            tail = node;
         }
-        j++;
+        addr += sizeof(buffer);
     }
-    // ensure addr is a multiple of 32
-    if ((addr % 10) != 0) {
-        printf("Address 0x%ld is not evenly divisible by 32.  Your address must be a hexadecimal value.\n", addr);
-        return;
-    }
-    int msglen = strlen(data) + 1;
-    if (msglen > 32) {
-        printf("Data is too long. Max length is 32.\n");
-        return;
-    }
-    printf("Writing to address 0x%ld: %s\n", addr, data);
-    eeprom_write(addr, data, msglen);
+    return head;
 }
-
-void read(int argc, char* argv[]) {
-    if (argc != 2) {
-        printf("Usage: read <addr>\n");
-        printf("Ensure the address is a hexadecimal number.  No need to include 0x.\n");
-        return;
-    }
-    uint32_t addr = atoi(argv[1]); 
-    char data[32];
-    // ensure addr is a multiple of 32
-    if ((addr % 10) != 0) {
-        printf("Address 0x%ld is not evenly divisible by 32.  Your address must be a hexadecimal value.\n", addr);
-        return;
-    }
-    eeprom_read(addr, data, 32);
-    printf("String at address 0x%ld: %s\n", addr, data);
-}
-
-struct commands_t {
-    const char *cmd;
-    void      (*fn)(int argc, char *argv[]);
-};
-
-struct commands_t cmds[] = {
-    { "write", write },
-    { "read", read }
-};
-
-void exec(int argc, char *argv[])
-{
-    for(int i=0; i<sizeof cmds/sizeof cmds[0]; i++)
-        if (strcmp(cmds[i].cmd, argv[0]) == 0) {
-            cmds[i].fn(argc, argv);
-            return;
-        }
-    printf("%s: No such command.\n", argv[0]);
-}
-
-void parse_command(char *c)
-{
-    char *argv[20];
-    int argc=0;
-    int skipspace=1;
-    for(; *c; c++) {
-        if (skipspace) {
-            if (*c != ' ' && *c != '\t') {
-                argv[argc++] = c;
-                skipspace = 0;
-            }
-        } else {
-            if (*c == ' ' || *c == '\t') {
-                *c = '\0';
-                skipspace=1;
-            }
-        }
-    }
-    if (argc > 0) {
-        argv[argc] = "";
-        exec(argc, argv);
-    }
-}
-
-//===========================================================================
-// main()
-//===========================================================================
-/*
-int main() {
-    internal_clock();
-    
-    // I2C specific
-    enable_ports();
-    init_i2c();
-
-    // If you don't want to deal with the command shell, you can 
-    // comment out all code below and call 
-    // eeprom_read/eeprom_write directly.
-    init_usart5();
-    enable_tty_interrupt();
-    // These turn off buffering.
-    setbuf(stdin,0); 
-    setbuf(stdout,0);
-    setbuf(stderr,0);
-    // uint8_t dataaaaa = {1,2,34};
-    //i2c_start(0x56, 0, 0);
-    //i2c_stop();
-    // while(1){
-    //     printf("Reached first print in main.\n");
-    //     i2c_senddata(0x56, dataaaaa, 2);
-    //     printf("Reached second print in main.\n");
-    // }
-    
-    printf("I2C Command Shell\n");
-    printf("This is a simple shell that allows you to write to or read from the I2C EEPROM at %d.\n", EEPROM_ADDR);
-    for(;;) {
-        printf("\n> ");
-        char line[100];
-        fgets(line, 99, stdin);
-        line[99] = '\0';
-        int len = strlen(line);
-        if (line[len-1] == '\n')
-            line[len-1] = '\0';
-        parse_command(line);
-    }
-}
-
-
-*/
