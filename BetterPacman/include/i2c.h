@@ -42,4 +42,20 @@ void i2c_clearnack();
 void init_usart5();
 void enable_tty_interrupt();
 
+/**
+ * @brief Writes the leaderboard at the end of a game into 
+ *        memory on the EEPROM chip, stored for the next 
+ *        game instance
+ * 
+ * @param head Head node of leaderboard 
+ */
+void save_high_scores_to_eeprom(High_score* head);
+
+/**
+ * @brief Reads the leaderboard from the memory of the EEPROM chip
+ *        and stores it in a linked list
+ * 
+ * @returns Head node of leaderboard 
+ */
+High_score* load_high_scores_from_eeprom();
 #endif /* _I2C_H_ */
