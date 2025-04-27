@@ -1,88 +1,94 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include "stm32f0xx.h"
-#include "high_score.h"
-
 /**
- * TODO:
- * [DONE] put struct and any/all #defines into related header file to clean up this src file 
- * [READ DONE] finish writing read/write functions
- * test calling read/write functions from some main function
+ * 
+ * @file: i2c.c
+ * @author: Alex Piet
+ * 
+ * @description: 
+ *      This file holds all of the code necessary to implement the read and 
+ *      write functionality for the purpose of creating a leaderboard to be 
+ *      displayed on the high score screen of Team 10's "Better Pacman" game.
  * 
  */
 
+#include "i2c.h"
+#include "high_score.h"
 
-High_score* read_high_score_data() {
-    FILE* file = fopen("high_scores.txt", "r");
-    if (file == NULL) {
-        perror("Error opening file.");
-        return 1; // exit_failure if file not found
+void update_leaderboard(High_score* head, uint32_t player_score) {
+    High_score* curr = head;
+    High_score* prev = NULL;
+    while (curr != NULL) {
+        if (player_score > curr->score) {
+            add_new_high_score(prev, curr, player_score);
+            return;
+        }
+        prev = curr;
+        curr = curr->next;
     }
+}
 
+void add_new_high_score(High_score* prev, High_score* curr, uint32_t player_score) {
+    High_score* new_node = malloc(sizeof(High_score));
+    if (!new_node) return; // if true -> error malloc'ing
+    char name_buf[4];
+    get_player_name(name_buf);
+    strncpy(new_node->name, name_buf, 4); // copy player name (name_buf) into name field of new_node
+    new_node->score = player_score;
+    new_node->next = curr;
+    if (prev) {
+        prev->next = new_node;
+    }
+    new_node->next = curr;
+}
+
+void get_player_name(char* buffer) {
+    strncpy(buffer, "YOU", 4);
+    // TBD
+    // this will call the output of another function 
+    // that I am not writing to get the characters
+}
+
+High_score* create_test_leaderboard() {
     High_score* head = NULL;
-    char line[MAX_LINE_LENGTH];
-    int place = 1;
-    while (fgets(line, MAX_LINE_LENGTH, file) != NULL) {
-        if (place > 10) break; // prevent reading >10 scores from text file
-        // process each line and add (names, scores) to list of high_score structs
-        line[strcspn(line, "\n")] = '\0';
-        char name[3];
-        int score;
-        sscanf(line, "%3s,%d", name, &score); // read (3 chars, score)
-        insert(&head, name, score, place++);
+    High_score* tail = NULL;
+
+    for (int i = 0; i < NUM_HIGH_SCORES; i++) {
+        High_score* node = malloc(sizeof(High_score));
+        if (!node) break; // error with malloc
+
+        char ch = 'A' + i;
+        node->name[0] = ch;
+        node->name[1] = ch;
+        node->name[2] = ch;
+        node->score = 1000 * (i + 1);  // 1000 to 10000
+
+        node->next = NULL;
+
+        if (!head) {
+            head = node;
+            tail = node;
+        } else {
+            tail->next = node;
+            tail = node;
+        }
     }
-    fclose(file);
 
     return head;
 }
 
-void write_high_score_data(High_score* scores) {
-    FILE* file = fopen("high_scores.txt", "w");
-    if (file == NULL) {
-        perror("Error opening file.");
-        return 1; // exit_failure if file not found
-    }
-
-    char line[MAX_LINE_LENGTH];
-
-    while (fgets(line, MAX_LINE_LENGTH, file) != NULL) {
-        // maybe change while() condition
-        // write to each line of the HS file
-    }
-    fclose(file);
-    return;
-}
-
-void insert(High_score** head, const char* name, int score, int place) {
-    High_score* new_node = malloc(sizeof(High_score));
-    strcpy(new_node->name, name);
-    new_node->score = score;
-    new_node->placement = 0; // update later
-    new_node->next = NULL;
-
-    // if empty list or new score > top score, update head of list
-    if (*head == NULL || (*head)->score < score) {
-        new_node->next = *head;
-        *head = new_node;
-    } else {
-        High_score* curr = *head;
-        // iterate to proper placement in high score list, then insert new score
-        while(curr->next != NULL && curr->next->score >= score) {
-            curr = curr->next;
-        }
-        new_node->next = curr->next;
-        new_node->placement = place;
-        curr->next = new_node;
-        
+void print_leaderboard(High_score* head) {
+    int rank = 1;
+    while (head) {
+        printf("%2d. %c%c%c - %ld\n", rank++,
+               head->name[0], head->name[1], head->name[2],
+               head->score);
+        head = head->next;
     }
 }
 
-void setup_i2c() {
-    I2C1->CR1 &= ~I2C_CR1_PE; // clear enable bit while setting up i2c
-    // figure out the rest of the necessary bits to enable to 
-    // transfer high score linked list data to the TFT-LCD display
-    /** refer to  */
-    I2C1->CR1 |= I2C_CR1_PE; // enable I2C after setting up data transfer process
+void free_leaderboard(High_score* head) {
+    while (head) {
+        High_score* temp = head;
+        head = head->next;
+        free(temp);
+    }
 }
