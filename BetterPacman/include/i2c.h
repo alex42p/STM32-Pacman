@@ -49,7 +49,7 @@ void enable_tty_interrupt();
  * 
  * @param head Head node of leaderboard 
  */
-void save_high_scores_to_eeprom(High_score* head);
+void save_high_scores_to_eeprom(struct High_score* head);
 
 /**
  * @brief Reads the leaderboard from the memory of the EEPROM chip
@@ -57,5 +57,5 @@ void save_high_scores_to_eeprom(High_score* head);
  * 
  * @returns Head node of leaderboard 
  */
-High_score* load_high_scores_from_eeprom();
+struct High_score* load_high_scores_from_eeprom();
 #endif /* _I2C_H_ */

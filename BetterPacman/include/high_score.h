@@ -43,8 +43,11 @@ void get_player_name(char* buffer);
  * @param prev Score above player's new high score
  * @param curr Score below player's new high score
  * @param player_score Player's game score
+ * @param head Head node of leaderboard
+ * 
+ * @returns Potentially updated head node
  */
-void add_new_high_score(High_score* prev, High_score* curr, uint32_t player_score);
+High_score* add_new_high_score(High_score* prev, High_score* curr, uint32_t player_score, High_score* head);
 
 /**
  * @brief Checks if the game score is higher than any existing
@@ -53,8 +56,10 @@ void add_new_high_score(High_score* prev, High_score* curr, uint32_t player_scor
  *  
  * @param head Head node of leaderboard
  * @param player_score Player's game score
+ * 
+ * @returns Potentially updated head node
  */
-void update_leaderboard(High_score* head, uint32_t player_score);
+High_score* update_leaderboard(High_score* head, uint32_t player_score);
 
 /**
  * @brief Creates a dummy leaderboard for debugging purposes

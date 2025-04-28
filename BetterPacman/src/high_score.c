@@ -12,39 +12,51 @@
 
 #include "i2c.h"
 #include "high_score.h"
+#include "keypad.h"
 
-void update_leaderboard(High_score* head, uint32_t player_score) {
+High_score* update_leaderboard(High_score* head, uint32_t player_score) {
     High_score* curr = head;
     High_score* prev = NULL;
     while (curr != NULL) {
         if (player_score > curr->score) {
-            add_new_high_score(prev, curr, player_score);
-            return;
+            // update and write new leaderboard to EEPROM 
+            head = add_new_high_score(prev, curr, player_score, head);
+            save_high_scores_to_eeprom(head); 
+            return head;
         }
         prev = curr;
         curr = curr->next;
     }
+    return head;
 }
 
-void add_new_high_score(High_score* prev, High_score* curr, uint32_t player_score) {
+High_score* add_new_high_score(High_score* prev, High_score* curr, uint32_t player_score, High_score* head) {
     High_score* new_node = malloc(sizeof(High_score));
-    if (!new_node) return; // if true -> error malloc'ing
+    if (!new_node) return head; // if true -> error malloc'ing
+
     char name_buf[4];
     get_player_name(name_buf);
     strncpy(new_node->name, name_buf, 4); // copy player name (name_buf) into name field of new_node
     new_node->score = player_score;
     new_node->next = curr;
+
     if (prev) {
         prev->next = new_node;
+        return head; // no change to head of list
+    } else {
+        return new_node; // new node is the head if prev=NULL
     }
-    new_node->next = curr;
 }
 
 void get_player_name(char* buffer) {
-    strncpy(buffer, "YOU", 4);
-    // TBD
-    // this will call the output of another function 
-    // that I am not writing to get the characters
+    name_entry_done = 0;
+    clear_display();
+    // wait until timer is done entering player initials
+    while (!name_entry_done) { 
+        asm("wfi");
+    }     
+    strncpy(buffer, name, 4);
+    letter_idx = 0;
 }
 
 High_score* create_test_leaderboard() {
@@ -59,7 +71,7 @@ High_score* create_test_leaderboard() {
         node->name[0] = ch;
         node->name[1] = ch;
         node->name[2] = ch;
-        node->score = 1000 * (i + 1);  // 1000 to 10000
+        node->score = 11000 - 1000 * (i + 1); // 10000 to 1000 
 
         node->next = NULL;
 
