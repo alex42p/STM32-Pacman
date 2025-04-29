@@ -29,9 +29,8 @@ extern void uart_send_string();
 
 void joystickPin_config(void) {
     RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
-    GPIOA->MODER &= ~(GPIO_MODER_MODER1 | GPIO_MODER_MODER2 | GPIO_MODER_MODER3); //clears pins 1 2 and 3
-    GPIOA->MODER |= (GPIO_MODER_MODER1 | GPIO_MODER_MODER2); //sets pins 1 and 2 as analog and 3 as an input
-
+    GPIOA->MODER &= ~(GPIO_MODER_MODER1 | GPIO_MODER_MODER2); //clears pins 1 2
+    GPIOA->MODER |= (GPIO_MODER_MODER1 | GPIO_MODER_MODER2); //sets pins 1 and 2 as analog
 }
 
 //_________________ADC_CONFIGURATION_______________________________//
