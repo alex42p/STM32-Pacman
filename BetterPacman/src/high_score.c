@@ -19,7 +19,12 @@ High_score* update_leaderboard(High_score* head, uint32_t player_score) {
     High_score* prev = NULL;
     while (curr != NULL) {
         if (player_score > curr->score) {
-            // update and write new leaderboard to EEPROM 
+            // show player name input on LED matrix
+            show_name_entry_screen();
+            for (int row = 0; row < 16; row++) {
+                display_row(row);
+            }
+            // update and write new leaderboard to EEPROM
             head = add_new_high_score(prev, curr, player_score, head);
             save_high_scores_to_eeprom(head); 
             return head;

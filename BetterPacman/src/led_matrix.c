@@ -1,17 +1,12 @@
 #include "stm32f0xx.h"
 #include <string.h>
 #include "keypad.h"
+#include "led_matrix.h"
 
+volatile enum GameState current_screen = WELCOME_SCREEN;
+// Timing variables
+volatile int welcome_timer = 0;
 volatile int need_screen_update = 0;
-extern void setup_tim3(void);
-extern void matrix_gpio_init(void);
-extern void display_row(uint8_t row);
-extern void draw_char(char c, int x, int y, uint8_t color);
-extern void draw_string(const char *str, int x, int y, uint8_t color);
-extern void show_welcome_screen(void);
-
-
-#define BRIGHTNESS_DELAY 50  // Play with this value!
 
 const uint8_t font5x7[96][5] = {
     {0x00,0x00,0x00,0x00,0x00}, // ' '
@@ -74,25 +69,6 @@ const uint8_t font5x7[96][5] = {
     {0x03,0x04,0x78,0x04,0x03}, // 'Y'
     {0x61,0x51,0x49,0x45,0x43}, // 'Z'
 };
-
-#define WIDTH 64
-#define HEIGHT 32
-
-uint8_t framebuffer[HEIGHT][WIDTH];
-
-#define R1_PIN 0
-#define G1_PIN 1
-#define B1_PIN 2
-#define R2_PIN 3
-#define G2_PIN 4
-#define B2_PIN 5
-#define A_PIN 6
-#define B_PIN 7
-#define C_PIN 8
-#define D_PIN 9
-#define CLK_PIN 10
-#define LAT_PIN 11
-#define OE_PIN 12
 
 void matrix_gpio_init(void) {
     RCC->AHBENR |= RCC_AHBENR_GPIOBEN;  // Enable GPIOB
@@ -190,28 +166,12 @@ void draw_string(const char *str, int x, int y, uint8_t color) {
     }
 }
 
-//extern void
-
-extern volatile int name_entry_done;
-extern char name[4];
-extern int letter_idx;
-
-// Game states
-enum GameState {
-    WELCOME_SCREEN,
-    NAME_ENTRY_SCREEN
-};
-
-volatile enum GameState current_screen = WELCOME_SCREEN;
-
-// Timing variables
-volatile int welcome_timer = 0;
 
 void show_welcome_screen(void) {
     draw_string("WELCOME!", 8, 2, 0b111);    // White text
     draw_string("PLAYER", 16, 18, 0b101);     // Pink text
 }
- 
+
 void show_name_entry_screen(void) {
     // Draw the current letter big
     char current_letter[2] = { name[letter_idx], '\0' }; // Single character string
@@ -222,42 +182,42 @@ void show_name_entry_screen(void) {
 }
 
 
-int main(void) {
-    gpio_init();
-    clear_screen();
-    enable_ports_keypad();
-    setup_tim7();     // <<< Add this to start TIM7!
-    //keypad_test_loop();
-    //setup_tim3();     // <<< Add this to start TIM3!
-    //need_screen_update = 1; // Force initial screen update
+// int main(void) {
+//     // gpio_init();
+//     // clear_screen();
+//     // enable_ports_keypad();
+//     // setup_tim7();     // <<< Add this to start TIM7!
+//     //keypad_test_loop();
+//     //setup_tim3();     // <<< Add this to start TIM3!
+//     //need_screen_update = 1; // Force initial screen update
 
-    while (1) {
+//     while (1) {
 
-        need_screen_update = 1; // Set the flag to update the screen
+//         need_screen_update = 1; // Set the flag to update the screen
 
-        if (current_screen == WELCOME_SCREEN) {
-            welcome_timer++;
-            if (welcome_timer > 80) {  // ~2 seconds depending on clock
-                current_screen = NAME_ENTRY_SCREEN;
-                need_screen_update = 1;  // <<< Force screen update when changing state
-            }
-        }
+//         if (current_screen == WELCOME_SCREEN) {
+//             welcome_timer++;
+//             if (welcome_timer > 80) {  // ~2 seconds depending on clock
+//                 current_screen = NAME_ENTRY_SCREEN;
+//                 need_screen_update = 1;  // <<< Force screen update when changing state
+//             }
+//         }
 
-        if (need_screen_update) {
-            clear_screen();
+//         if (need_screen_update) {
+//             clear_screen();
     
-            if (current_screen == WELCOME_SCREEN) {
-                show_welcome_screen();
-            }
-            else if (current_screen == NAME_ENTRY_SCREEN) {
-                show_name_entry_screen();
-            }
+//             if (current_screen == WELCOME_SCREEN) {
+//                 show_welcome_screen();
+//             }
+//             else if (current_screen == NAME_ENTRY_SCREEN) {
+//                 show_name_entry_screen();
+//             }
     
-            for (int row = 0; row < 16; row++) {
-                display_row(row);
-            }
+//             for (int row = 0; row < 16; row++) {
+//                 display_row(row);
+//             }
     
-            need_screen_update = 0; // clear flag
-        }
-      }
-}
+//             need_screen_update = 0; // clear flag
+//         }
+//     }
+// }

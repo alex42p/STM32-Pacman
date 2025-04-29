@@ -18,6 +18,7 @@ void lcd_init_sequence(void);
 void lcd_set_window(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
 void lcd_fill_screen(uint16_t color);
 void lcd_draw_string(uint16_t x, uint16_t y, const char *str, uint16_t color, uint16_t bg);
+void lcd_draw_char(uint16_t x, uint16_t y, const char *str, uint16_t color, uint16_t bg);
 
 // pacman.c
 void draw_pacman(Pacman *p);

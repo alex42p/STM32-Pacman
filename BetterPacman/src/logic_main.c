@@ -1,6 +1,7 @@
 #include "stm32f0xx.h"
 #include "decl.h"
 #include <stdio.h>
+#include "led_matrix.h"
 
 void nano_wait(unsigned int n) {
     asm(    "        mov r0,%0\n"
@@ -71,6 +72,14 @@ void start_game(void) {
     bool game_won = false;
     while (pacman.lives > 0 && game_won == false) {
         nano_wait(20000000);
+
+        // CHANGE TO DISPLAY LEADERBOARD - RIGHT HERE
+
+        // show_welcome_screen();
+        // for (int row = 0; row < 16; row++) {
+        //     display_row(row);
+        // }
+
         frames++;
         if (frames >= PACMAN_SPEED * GHOST_REG_SPEED) {
             frames = 0;

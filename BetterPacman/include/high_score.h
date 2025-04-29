@@ -28,7 +28,7 @@ typedef struct High_score {
 } High_score;
 
 #define MAX_LINE_LENGTH 100
-#define NUM_HIGH_SCORES 10
+#define NUM_HIGH_SCORES 4
 
 /**
  * @brief Copy the player's name from button input into a buffer
