@@ -108,7 +108,6 @@ void TIM2_IRQHandler () {
     
     while (!(ADC1->ISR & ADC_ISR_EOC));
     uint16_t y_raw = ADC1->DR;
-
     // 5. Wait for and read X-position (ADC_IN2)
     while (!(ADC1->ISR & ADC_ISR_EOC));
     uint16_t x_raw = ADC1->DR;
@@ -142,9 +141,9 @@ void TIM2_IRQHandler () {
         y_centered = -1.0f;
     }
 
-    char buffer[128];
-    snprintf(buffer, sizeof(buffer), "X: %d\t Y: %d\r\n", x_pos, y_pos);
-    uart_send_string(buffer);
+    // char buffer[128];
+    // snprintf(buffer, sizeof(buffer), "X: %d\t Y: %d\r\n", x_pos, y_pos);
+    // uart_send_string(buffer);
 
     // snprintf(buffer, sizeof(buffer), "X: %.2f\t Y: %.2f\r\n", x_centered, y_centered);
     // uart_send_string(buffer);
@@ -156,13 +155,12 @@ void tim2_init(void) {
     RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
 
     TIM2->PSC = 480 - 1;     // Prescaler → 1 kHz timer clock
-    TIM2->ARR = 10 - 1;       // 10 Hz trigger rate (every 100ms)
+    TIM2->ARR = 500 - 1;       // 10 Hz trigger rate (every 100ms)
     TIM2->DIER |= TIM_DIER_UIE;  // Enable update interrupt
     TIM2->CR1 |= TIM_CR1_CEN;    // Start timer
 
     NVIC_EnableIRQ(TIM2_IRQn);
 }
-
 
 
 
