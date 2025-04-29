@@ -2,6 +2,12 @@
 #include "decl.h"
 #include <stdio.h>
 
+void nano_wait(unsigned int n) {
+    asm(    "        mov r0,%0\n"
+            "repeat: sub r0,#83\n"
+            "        bgt repeat\n" : : "r"(n) : "r0", "cc");
+}
+
 char map[20][32] = {
     "################################",
     "##o...........##...........o##",
@@ -43,20 +49,20 @@ extern volatile uint32_t x_pos;
 int scared_timer = 0;
 bool ghosts_scared = false;
 
-int main(void) {
-    internal_clock();
-    // initialize spi interfacing with TFT LCD 
-    init_spi1_tft();
-    lcd_init_sequence();
-    init_usart5();      // Setup USART5 (TX = PC12, RX = PD2)
-    joystickPin_config(); // Set joystick pins to analog
-    joystick_adc();     // Setup ADC1 for reading joystick X and Y
-    tim2_init();        // Start TIM2 periodic interrupt
+// int main(void) {
+//     internal_clock();
+//     // initialize spi interfacing with TFT LCD 
+//     init_spi1_tft();
+//     lcd_init_sequence();
+//     init_usart5();      // Setup USART5 (TX = PC12, RX = PD2)
+//     joystickPin_config(); // Set joystick pins to analog
+//     joystick_adc();     // Setup ADC1 for reading joystick X and Y
+//     tim2_init();        // Start TIM2 periodic interrupt
 
-    start_game();
+//     start_game();
 
-    while (1);
-}
+//     while (1);
+// }
 
 void start_game(void) {
     lcd_fill_screen(COLOR_BLACK);
@@ -113,9 +119,9 @@ void start_game(void) {
         if (frames % PACMAN_SPEED == 0) {
             move_pacman(&pacman);
         }
-        char buffer[128];
-        snprintf(buffer, sizeof(buffer), "score: %d\r\n", pacman.score);
-        uart_send_string(buffer);
+        // char buffer[128];
+        // snprintf(buffer, sizeof(buffer), "score: %ld\r\n", pacman.score);
+        // uart_send_string(buffer);
         game_won = check_win();
     }
     if (game_won == true) {

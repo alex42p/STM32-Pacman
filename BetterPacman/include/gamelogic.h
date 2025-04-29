@@ -1,3 +1,5 @@
+#ifndef _GAME_LOGIC_H_
+#define _GAME_LOGIC_H_ 1
 #include<stdbool.h>
 // colors
 #define COLOR_RED    0xF800
@@ -82,3 +84,5 @@ extern Ghost clyde;
 extern int scared_timer;
 extern bool ghosts_scared;
 #define SCARED_TIME 400 
+
+#endif /* _GAME_LOGIC_H_ */

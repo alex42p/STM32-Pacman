@@ -9,8 +9,8 @@ void init_spi1_tft(void) {
     RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
 
     // PA3 = RESET, PA4 = CS, PA6 = DC → GPIO output
-    GPIOA->MODER &= ~((3 << (2*3)) | (3 << (2*4)) | (3 << (2*6)));
-    GPIOA->MODER |=  ((1 << (2*3)) | (1 << (2*4)) | (1 << (2*6)));
+    GPIOA->MODER &= ~((3 << (2*3)) | (3 << (2*15)) | (3 << (2*6)));
+    GPIOA->MODER |=  ((1 << (2*3)) | (1 << (2*15)) | (1 << (2*6)));
 
     // PA5 = SCK, PA7 = MOSI → AF0
     GPIOA->MODER &= ~((3 << (2*5)) | (3 << (2*7)));

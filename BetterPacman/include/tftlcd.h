@@ -6,8 +6,8 @@
 // #define RST_LOW   (GPIOB->BRR |= (1 << 11))
 // #define RST_HIGH  (GPIOB->BSRR |= (1 << 11))
 
-#define CS_LOW    (GPIOA->BRR |= (1 << 4))
-#define CS_HIGH   (GPIOA->BSRR |= (1 << 4))
+#define CS_LOW    (GPIOA->BRR |= (1 << 15))
+#define CS_HIGH   (GPIOA->BSRR |= (1 << 15))
 #define DC_CMD    (GPIOA->BRR |= (1 << 6))  // PA6 for DC LOW
 #define DC_DATA   (GPIOA->BSRR |= (1 << 6)) // PA6 for DC HIGH
 #define RST_LOW   (GPIOA->BRR |= (1 << 3))
