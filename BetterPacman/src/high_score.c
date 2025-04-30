@@ -92,6 +92,34 @@ High_score* create_test_leaderboard() {
     return head;
 }
 
+High_score* zero_out_leaderboard() {
+    High_score* head = NULL;
+    High_score* tail = NULL;
+    
+    for (int i = 0; i < NUM_HIGH_SCORES; i++) {
+        High_score* node = malloc(sizeof(High_score));
+        if (!node) break; // error with malloc
+
+        // all new nodes will be "AAA, 0x00" in memory
+        char ch = 'A';
+        node->name[0] = ch;
+        node->name[1] = ch;
+        node->name[2] = ch;
+        node->score = 0;
+        node->next = NULL;
+
+        if (!head) {
+            head = node;
+            tail = node;
+        } else {
+            tail->next = node;
+            tail = node;
+        }
+    }
+    // WARNING: overwrites existing leaderboard from memory - not recoverable
+    save_high_scores_to_eeprom(head); 
+}
+
 void print_leaderboard(High_score* head) {
     int rank = 1;
     while (head) {

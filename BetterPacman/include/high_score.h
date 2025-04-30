@@ -69,6 +69,18 @@ High_score* update_leaderboard(High_score* head, uint32_t player_score);
 High_score* create_test_leaderboard();
 
 /**
+ * @brief This function will overwrite all saved values in the EEPROM with 
+ *        'AAA', 0x00 at each node. This is useful for testing the update 
+ *        high score functionality, so that the leaderboard will always 
+ *        accept a test player's score to the leaderboard. 
+ *        This function is also a good substitute to create_test_leaderboard()
+ *        if there is no existing leaderboard saved to the EEPROM to begin with.
+ * 
+ * @returns Head node of new zero'd out leaderboard
+ */
+High_score* zero_out_leaderboard();
+
+/**
  * @brief Frees all malloc'd memory from the heap
  * 
  * @param head Head node of leaderboard
