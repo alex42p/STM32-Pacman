@@ -22,7 +22,7 @@ int main(void) {
     setbuf(stdin,0); // These turn off buffering
     setbuf(stdout,0);
     setbuf(stderr,0);
-    
+
     init_spi1_tft();
     lcd_init_sequence();
     init_usart5();      // Setup USART5 (TX = PC12, RX = PD2)

@@ -117,6 +117,8 @@ void move_pacman(Pacman *p) {
             // uart_send_string(buffer);
             map[p->row][p->col] = ' ';   // eat the pellet
             p->score += 10;              // increase score
+            // init_tim6();
+            play_audio();
         }
         if (map[p->row][p->col] == 'o') {
             map[p->row][p->col] = ' ';   // eat the power pellet
