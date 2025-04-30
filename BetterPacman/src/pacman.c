@@ -39,7 +39,7 @@ void check_ghost_collision(Pacman *p, Ghost *g1, Ghost *g2, Ghost *g3, Ghost *g4
                 erase_tile(g->col, g->row);
                 reset_ghost(g);
                 p->score += 200;  // bonus points for eating ghost
-                nano_wait(1000000000); 
+                nano_wait(500000000); 
                 draw_ghost(g);
             } else {
                 // Pac-Man dies

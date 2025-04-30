@@ -87,16 +87,16 @@ const uint8_t font3x5[96][3] = {
     {0x04,0x04,0x04}, // '-'
     {0x00,0x10,0x00}, // '.'
     {0x18,0x04,0x03}, // '/'
-    {0x0E,0x11,0x0E}, // '0'
-    {0x12,0x1F,0x10}, // '1'
-    {0x1D,0x15,0x17}, // '2'
-    {0x11,0x15,0x0A}, // '3'
-    {0x0C,0x0A,0x1F}, // '4'
-    {0x17,0x15,0x09}, // '5'
-    {0x0E,0x15,0x08}, // '6'
-    {0x01,0x1D,0x03}, // '7'
-    {0x0A,0x15,0x0A}, // '8'
-    {0x02,0x15,0x0E}, // '9'
+    {0x1F, 0x11, 0x1F}, // '0'
+    {0x12, 0x1F, 0x10}, // '1'
+    {0x1D, 0x15, 0x17}, // '2'
+    {0x15, 0x15, 0x1F}, // '3'
+    {0x07, 0x04, 0x1F}, // '4'
+    {0x17, 0x15, 0x1D}, // '5'
+    {0x1F, 0x15, 0x1D}, // '6'
+    {0x01, 0x01, 0x1F}, // '7'
+    {0x1F, 0x15, 0x1F}, // '8'
+    {0x17, 0x15, 0x1F}, // '9'
     {0x00,0x0A,0x00}, // ':'
     {0x10,0x0A,0x00}, // ';'
     {0x04,0x0A,0x11}, // '<'
@@ -312,8 +312,8 @@ void draw_number(int number, int x_start, int y, uint8_t color) {
 }
 
 void show_current_score_screen(u_int32_t score) {
-    draw_small_string("SCORE", 40, 8, 0b111); // White text
-    draw_number(score, 39, 15, 0b1011);
+    draw_small_string("SCORE", 41, 8, 0b111); // White text
+    draw_small_number(score, 39, 15, 0b1011);
 }
 
 // void show_person_board(const char *string, u_int32_t score) {
@@ -323,11 +323,13 @@ void show_current_score_screen(u_int32_t score) {
 
 void show_leader_board_screen(High_score* head, uint32_t score) {
     show_current_score_screen(score);
-    draw_small_string("HIGH SCORES", 2, 2, 0b111); // White text
+    draw_small_string("HIGH SCORES", 1, 2, 0b111); // White text
     int y = 8;
+    uint32_t i = 1;
     while (head) {
-        draw_small_string(head->name, 5, y, 0b111); // White text
-        draw_small_number(head->score, 20, y, 0b101);
+        draw_small_number(i++, 1, y, 0b111);
+        draw_small_string(head->name, 6, y, 0b111); // White text
+        draw_small_number(head->score, 19, y, 0b101);
         head = head->next;
         y += 6; // Move down for the next entry
     }

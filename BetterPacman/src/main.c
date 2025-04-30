@@ -38,6 +38,7 @@ int main(void) {
 
     // before game
     High_score* leaderboard = load_high_scores_from_eeprom();
+    // High_score* leaderboard = zero_out_leaderboard();
 
     // if (current_screen == WELCOME_SCREEN) {
     for (welcome_timer = 0; welcome_timer < 250; welcome_timer++) {

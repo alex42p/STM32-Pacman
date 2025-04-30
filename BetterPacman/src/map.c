@@ -1,6 +1,36 @@
 #include "decl.h"
 
 void load_background(void) {
+    pacman.row = PACMAN_ORIG_ROW;
+    pacman.col = PACMAN_ORIG_COL;
+    pacman.prev_row = PACMAN_ORIG_ROW;
+    pacman.prev_col = PACMAN_ORIG_COL;
+    blinky.row = BLINKY_ORIG_ROW;
+    blinky.col = BLINKY_ORIG_COL;
+    blinky.prev_row = BLINKY_ORIG_ROW;
+    blinky.prev_col = BLINKY_ORIG_COL;
+    inky.row = INKY_ORIG_ROW;
+    inky.col = INKY_ORIG_COL;
+    inky.prev_row = INKY_ORIG_ROW;
+    inky.prev_col = INKY_ORIG_COL;
+    pinky.row = PINKY_ORIG_ROW;
+    pinky.col = PINKY_ORIG_COL;
+    pinky.prev_row = PINKY_ORIG_ROW;
+    pinky.prev_col = PINKY_ORIG_COL;
+    clyde.row = CLYDE_ORIG_ROW;
+    clyde.col = CLYDE_ORIG_COL;
+    clyde.prev_row = CLYDE_ORIG_ROW;
+    clyde.prev_col = CLYDE_ORIG_COL;
+    blinky.is_scared = false;
+    blinky.in_house = true;
+    inky.is_scared = false;
+    inky.in_house = true;
+    pinky.is_scared = false;
+    pinky.in_house = true;
+    clyde.is_scared = false;
+    clyde.in_house = true;
+    
+    
     for (int row = 0; row < 20; row++) {
         for (int col = 0; col < 30; col++) {
             uint16_t color = (map[row][col] == '#') ? 0x001F : 0x0000;
