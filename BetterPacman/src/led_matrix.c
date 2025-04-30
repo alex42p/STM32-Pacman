@@ -70,6 +70,68 @@ const uint8_t font5x7[96][5] = {
     {0x61,0x51,0x49,0x45,0x43}, // 'Z'
 };
 
+const uint8_t font3x5[96][3] = {
+    {0x00, 0x00, 0x00}, // ' '
+    {0x00,0x17,0x00}, // '!'
+    {0x03,0x00,0x03}, // '"'
+    {0x1F,0x0A,0x1F}, // '#'
+    {0x0A,0x1F,0x05}, // '$'
+    {0x19,0x04,0x13}, // '%'
+    {0x0A,0x15,0x1A}, // '&'
+    {0x00,0x03,0x00}, // '''
+    {0x00,0x0E,0x11}, // '('
+    {0x11,0x0E,0x00}, // ')'
+    {0x05,0x02,0x05}, // '*'
+    {0x04,0x0E,0x04}, // '+'
+    {0x10,0x08,0x00}, // ','
+    {0x04,0x04,0x04}, // '-'
+    {0x00,0x10,0x00}, // '.'
+    {0x18,0x04,0x03}, // '/'
+    {0x0E,0x11,0x0E}, // '0'
+    {0x12,0x1F,0x10}, // '1'
+    {0x1D,0x15,0x17}, // '2'
+    {0x11,0x15,0x0A}, // '3'
+    {0x0C,0x0A,0x1F}, // '4'
+    {0x17,0x15,0x09}, // '5'
+    {0x0E,0x15,0x08}, // '6'
+    {0x01,0x1D,0x03}, // '7'
+    {0x0A,0x15,0x0A}, // '8'
+    {0x02,0x15,0x0E}, // '9'
+    {0x00,0x0A,0x00}, // ':'
+    {0x10,0x0A,0x00}, // ';'
+    {0x04,0x0A,0x11}, // '<'
+    {0x0A,0x0A,0x0A}, // '='
+    {0x11,0x0A,0x04}, // '>'
+    {0x01,0x15,0x02}, // '?'
+    {0x0E,0x15,0x16}, // '@'
+    {0x1E,0x05,0x1E}, // 'A'
+    {0x1F,0x15,0x0A}, // 'B'
+    {0x0E,0x11,0x11}, // 'C'
+    {0x1F,0x11,0x0E}, // 'D'
+    {0x1F,0x15,0x11}, // 'E'
+    {0x1F,0x05,0x01}, // 'F'
+    {0x0E,0x11,0x1D}, // 'G'
+    {0x1F,0x04,0x1F}, // 'H'
+    {0x11,0x1F,0x11}, // 'I'
+    {0x08,0x10,0x0F}, // 'J'
+    {0x1F,0x04,0x1B}, // 'K'
+    {0x1F,0x10,0x10}, // 'L'
+    {0x1F,0x06,0x1F}, // 'M'
+    {0x1F,0x0E,0x1F}, // 'N'
+    {0x0E,0x11,0x0E}, // 'O'
+    {0x1F,0x05,0x02}, // 'P'
+    {0x0E,0x11,0x1E}, // 'Q'
+    {0x1F,0x0D,0x16}, // 'R'
+    {0x12,0x15,0x09}, // 'S'
+    {0x01,0x1F,0x01}, // 'T'
+    {0x0F,0x10,0x1F}, // 'U'
+    {0x07,0x18,0x07}, // 'V'
+    {0x1F,0x0C,0x1F}, // 'W'
+    {0x1B,0x04,0x1B}, // 'X'
+    {0x03,0x1C,0x03}, // 'Y'
+    {0x19,0x15,0x13}  // 'Z'
+};
+
 void matrix_gpio_init(void) {
     RCC->AHBENR |= RCC_AHBENR_GPIOBEN;  // Enable GPIOB
     GPIOB->MODER |= 0x55555555;           // All PBx pins to output
@@ -166,7 +228,6 @@ void draw_string(const char *str, int x, int y, uint8_t color) {
     }
 }
 
-
 void show_welcome_screen(void) {
     draw_string("WELCOME!", 8, 2, 0b111);    // White text
     draw_string("PLAYER", 16, 18, 0b101);     // Pink text
@@ -181,43 +242,93 @@ void show_name_entry_screen(void) {
     draw_string(name, 5, 20, 0b011);             // Bottom line for name
 }
 
+void draw_small_char(char c, int x, int y, uint8_t color) {
+    if (c < 32 || c > 127) return;
+    const uint8_t *glyph = font3x5[c - 32];
 
-// int main(void) {
-//     // gpio_init();
-//     // clear_screen();
-//     // enable_ports_keypad();
-//     // setup_tim7();     // <<< Add this to start TIM7!
-//     //keypad_test_loop();
-//     //setup_tim3();     // <<< Add this to start TIM3!
-//     //need_screen_update = 1; // Force initial screen update
+    for (int col = 0; col < 3; col++) {
+        uint8_t bits = glyph[col];
+        for (int row = 0; row < 5; row++) {
+            if (bits & (1 << row)) {
+                int px = x + col;
+                int py = y + row;
+                if (px >= 0 && px < WIDTH && py >= 0 && py < HEIGHT) {
+                    framebuffer[py][px] = color;
+                }
+            }
+        }
+    }
+}
 
-//     while (1) {
+void draw_small_string(const char *str, int x, int y, uint8_t color) {
+    while (*str) {
+        draw_small_char(*str, x, y, color);
+        if (*str == ' '){
+            x += 1;
+        }
+        else{
+        x += 4;  // 3 pixels + 1 space
+        }
+        str++;
+    }
+}
 
-//         need_screen_update = 1; // Set the flag to update the screen
+void draw_small_number(int number, int x_start, int y, uint8_t color) {
+    char buffer[12];
+    int i = 0;
 
-//         if (current_screen == WELCOME_SCREEN) {
-//             welcome_timer++;
-//             if (welcome_timer > 80) {  // ~2 seconds depending on clock
-//                 current_screen = NAME_ENTRY_SCREEN;
-//                 need_screen_update = 1;  // <<< Force screen update when changing state
-//             }
-//         }
+    if (number == 0) {
+        buffer[i++] = '0';
+    }
 
-//         if (need_screen_update) {
-//             clear_screen();
-    
-//             if (current_screen == WELCOME_SCREEN) {
-//                 show_welcome_screen();
-//             }
-//             else if (current_screen == NAME_ENTRY_SCREEN) {
-//                 show_name_entry_screen();
-//             }
-    
-//             for (int row = 0; row < 16; row++) {
-//                 display_row(row);
-//             }
-    
-//             need_screen_update = 0; // clear flag
-//         }
-//     }
+    while (number > 0) {
+        buffer[i++] = (number % 10) + '0';
+        number /= 10;
+    }
+
+    for (int j = i - 1; j >= 0; j--) {
+        draw_small_char(buffer[j], x_start, y, color);
+        x_start += 4;
+    }
+}
+
+void draw_number(int number, int x_start, int y, uint8_t color) {
+    char buffer[12];
+    int i = 0;
+
+    if (number == 0) {
+        buffer[i++] = '0';
+    }
+
+    while (number > 0) {
+        buffer[i++] = (number % 10) + '0';
+        number /= 10;
+    }
+
+    for (int j = i - 1; j >= 0; j--) {
+        draw_char(buffer[j], x_start, y, color);
+        x_start += 6;
+    }
+}
+
+void show_current_score_screen(u_int32_t score) {
+    draw_small_string("SCORE", 40, 8, 0b111); // White text
+    draw_number(score, 39, 15, 0b1011);
+}
+
+// void show_person_board(const char *string, u_int32_t score) {
+//     draw_small_string(*string, 5, 5, 0b111); // White text
+//     draw_small_number(score, 20, 5, 0b101);
 // }
+
+void show_leader_board_screen(High_score* head, uint32_t score) {
+    show_current_score_screen(score);
+    draw_small_string("HIGH SCORES", 2, 2, 0b111); // White text
+    int y = 8;
+    while (head) {
+        draw_small_string(head->name, 5, y, 0b111); // White text
+        draw_small_number(head->score, 20, y, 0b101);
+        head = head->next;
+        y += 6; // Move down for the next entry
+    }
+}

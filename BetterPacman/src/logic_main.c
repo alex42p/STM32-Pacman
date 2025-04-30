@@ -65,20 +65,21 @@ bool ghosts_scared = false;
 //     while (1);
 // }
 
-void start_game(void) {
+void start_game(High_score* head) {
     lcd_fill_screen(COLOR_BLACK);
     load_background();
     int frames = 0;
     bool game_won = false;
     while (pacman.lives > 0 && game_won == false) {
-        nano_wait(20000000);
+        nano_wait(19000000);
 
         // CHANGE TO DISPLAY LEADERBOARD - RIGHT HERE
-
-        // show_welcome_screen();
-        // for (int row = 0; row < 16; row++) {
-        //     display_row(row);
-        // }
+        uint32_t score = pacman.score;
+        clear_screen();
+        show_leader_board_screen(head, score);
+        for (int row = 0; row < 16; row++) {
+            display_row(row);
+        }
 
         frames++;
         if (frames >= PACMAN_SPEED * GHOST_REG_SPEED) {

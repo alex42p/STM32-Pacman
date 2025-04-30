@@ -10,6 +10,7 @@
  */
 
 #include "keypad.h"
+#include "led_matrix.h"
 
 uint8_t col = 0;
 char disp[4]; // 3 letters + '\0'
@@ -49,6 +50,10 @@ void disable_tim7() {
 
 void TIM7_IRQHandler() {
     TIM7->SR &= ~TIM_SR_UIF; // clear interrupt flag
+
+    for (int row = 0; row < 16; row++) {
+        display_row(row);
+    }
     
     int rows = read_rows();
 
@@ -56,6 +61,10 @@ void TIM7_IRQHandler() {
         char key = rows_to_key(rows);
         if (key != 0) 
             handle_key(key);
+            clear_screen();
+            show_name_entry_screen();
+
+            
     }
 
     col++;

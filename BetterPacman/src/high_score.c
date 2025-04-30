@@ -105,6 +105,7 @@ High_score* zero_out_leaderboard() {
         node->name[0] = ch;
         node->name[1] = ch;
         node->name[2] = ch;
+        node->name[3] = '\0'; // null terminate the string
         node->score = 0;
         node->next = NULL;
 
@@ -118,6 +119,7 @@ High_score* zero_out_leaderboard() {
     }
     // WARNING: overwrites existing leaderboard from memory - not recoverable
     save_high_scores_to_eeprom(head); 
+    return head;
 }
 
 void print_leaderboard(High_score* head) {
