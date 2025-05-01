@@ -6,8 +6,6 @@
 #include "gamelogic.h"
 #include "led_matrix.h"
 
-// void test_eeprom();
-// void test_add_to_leaderboard();
 extern void internal_clock();
 extern volatile enum GameState current_screen;
 
@@ -32,15 +30,12 @@ int main(void) {
     tim2_init();        // Start TIM2 periodic interrupt
     matrix_gpio_init();
     clear_screen();
-    // enable_ports_keypad();
-    // setup_tim7();     // <<< Add this to start TIM7!
 
 
     // before game
     High_score* leaderboard = load_high_scores_from_eeprom();
     // High_score* leaderboard = zero_out_leaderboard();
 
-    // if (current_screen == WELCOME_SCREEN) {
     for (welcome_timer = 0; welcome_timer < 250; welcome_timer++) {
         show_welcome_screen();
         for (int row = 0; row < 16; row++) {
@@ -48,23 +43,6 @@ int main(void) {
         }
     }
     clear_screen();
-    //}
-    // current_screen = WELCOME_SCREEN;
-    // if (current_screen == WELCOME_SCREEN) {
-    //     welcome_timer++;
-    //     if (welcome_timer > 8000) {  // ~2 seconds depending on clock
-    //         current_screen = NAME_ENTRY_SCREEN;
-    //         need_screen_update = 1;  // <<< Force screen update when changing state
-    //     }
-    // }
-
-    // for (welcome_timer = 0; welcome_timer < 500; welcome_timer++) {
-    //     show_leader_board_screen(leaderboard, 1000);
-    //     for (int row = 0; row < 16; row++) {
-    //         display_row(row);
-    //     }
-    // }
-
 
     // begin the game 
     start_game(leaderboard);
@@ -79,13 +57,7 @@ int main(void) {
     disable_tim7();
 
     clear_screen();
-    // welcome_timer = 0;
-    // for (welcome_timer = 0; welcome_timer < 500; welcome_timer++) {
-    //     show_current_score_screen(player_score);
-    //     for (int row = 0; row < 16; row++) {
-    //         display_row(row);
-    //     }
-    // }
+
 
     while(1)
     {

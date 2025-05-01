@@ -36,7 +36,6 @@ void enable_ports_keypad(){
 
 void setup_tim7() {
     RCC->APB1ENR |= RCC_APB1ENR_TIM7EN;
-    // 4 interrupts per second - update to be faster once it works
     TIM7->PSC = 48000 - 1;
     TIM7->ARR = 40 - 1;
     TIM7->DIER |= TIM_DIER_UIE;

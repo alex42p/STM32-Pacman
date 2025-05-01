@@ -72,21 +72,6 @@ extern volatile uint32_t x_pos;
 int scared_timer = 0;
 bool ghosts_scared = false;
 
-// int main(void) {
-//     internal_clock();
-//     // initialize spi interfacing with TFT LCD 
-//     init_spi1_tft();
-//     lcd_init_sequence();
-//     init_usart5();      // Setup USART5 (TX = PC12, RX = PD2)
-//     joystickPin_config(); // Set joystick pins to analog
-//     joystick_adc();     // Setup ADC1 for reading joystick X and Y
-//     tim2_init();        // Start TIM2 periodic interrupt
-
-//     start_game();
-
-//     while (1);
-// }
-
 void start_game(High_score* head) {
     lcd_fill_screen(COLOR_BLACK);
     load_background();
