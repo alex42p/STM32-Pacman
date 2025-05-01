@@ -23,7 +23,7 @@ int main(void) {
 
     init_spi1_tft();
     lcd_init_sequence();
-    init_usart5();      // Setup USART5 (TX = PC12, RX = PD2)
+    // init_usart5();      // Setup USART5 (TX = PC12, RX = PD2)
     joystickPin_config(); // Set joystick pins to analog
     joystick_adc();     // Setup ADC1 for reading joystick X and Y
 
@@ -43,9 +43,9 @@ int main(void) {
         }
     }
     clear_screen();
-
+    int level = 0;
     // begin the game 
-    start_game(leaderboard);
+    start_game(leaderboard, level);
     uint32_t player_score = pacman.score;
     printf("Player score: %ld", player_score);
 

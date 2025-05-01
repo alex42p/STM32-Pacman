@@ -68,6 +68,11 @@ const uint8_t font5x7[96][5] = {
     {0x63,0x14,0x08,0x14,0x63}, // 'X'
     {0x03,0x04,0x78,0x04,0x03}, // 'Y'
     {0x61,0x51,0x49,0x45,0x43}, // 'Z'
+    {0x00,0x00,0x00,0x00,0x00},
+    {0x00,0x00,0x00,0x00,0x00},
+    {0x00,0x00,0x00,0x00,0x00},
+    {0x00,0x00,0x00,0x00,0x00},
+    {0x01,0x01,0x01,0x01,0x01}, // '_'
 };
 
 const uint8_t font3x5[96][3] = {
@@ -223,7 +228,13 @@ void draw_char(char c, int x, int y, uint8_t color) {
 void draw_string(const char *str, int x, int y, uint8_t color) {
     while (*str) {
         draw_char(*str, x, y, color);
+        if (*str == ' '){
+            x += 3;
+        }
+        else{
         x += 6;  // 5 pixels + 1 space
+        }
+        // x += 6;  // 5 pixels + 1 space
         str++;
     }
 }
@@ -234,12 +245,11 @@ void show_welcome_screen(void) {
 }
 
 void show_name_entry_screen(void) {
-    // Draw the current letter big
-    char current_letter[2] = { name[letter_idx], '\0' }; // Single character string
-    draw_string(current_letter, 28, 5, 0b111);  // Centered big letter
-
+    draw_small_string("NEW HIGH SCORE!", 3, 4, 0b111);
+    draw_small_string("ENTER NAME:", 3, 11, 0b111);    
     // Draw the typed name so far
     draw_string(name, 5, 20, 0b011);             // Bottom line for name
+    draw_char('_', 5+6*letter_idx, 28, 0b111);
 }
 
 void draw_small_char(char c, int x, int y, uint8_t color) {
@@ -313,7 +323,8 @@ void draw_number(int number, int x_start, int y, uint8_t color) {
 
 void show_current_score_screen(u_int32_t score) {
     draw_small_string("SCORE", 41, 8, 0b111); // White text
-    draw_small_number(score, 39, 15, 0b1011);
+    // draw_small_number(score, 39, 15, 0b1011);
+    draw_small_number(score, 39, 15, 0b110); // light blue
 }
 
 // void show_person_board(const char *string, u_int32_t score) {

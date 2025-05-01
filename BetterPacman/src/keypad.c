@@ -11,6 +11,8 @@
 
 #include "keypad.h"
 #include "led_matrix.h"
+#include "decl.h"
+#include "gamelogic.h"
 
 uint8_t col = 0;
 char disp[4]; // 3 letters + '\0'
@@ -58,11 +60,12 @@ void TIM7_IRQHandler() {
 
     if (rows != 0) {
         char key = rows_to_key(rows);
-        if (key != 0) 
+        if (key != 0) {
             handle_key(key);
             clear_screen();
+            // show_leader_board_screen(head, pacman.score);
             show_name_entry_screen();
-
+        }
             
     }
 

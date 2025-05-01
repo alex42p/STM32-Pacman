@@ -29,6 +29,7 @@ extern void show_welcome_screen(void);
 extern void clear_screen(void);
 extern void show_leader_board_screen(High_score* head, uint32_t player_score);
 void show_name_entry_screen(void);
+void draw_small_string(const char *str, int x, int y, uint8_t color);
 
 
 #define BRIGHTNESS_DELAY 50  // Play with this value!

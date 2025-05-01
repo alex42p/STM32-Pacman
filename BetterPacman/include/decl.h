@@ -2,6 +2,7 @@
 #include<stdbool.h>
 #include<math.h>
 #include "gamelogic.h"
+#include "high_score.h"
 
 extern struct Ghost g;
 void nano_wait(unsigned int n);
@@ -50,7 +51,7 @@ bool check_win(void);
 
 
 // main.c
-void start_game();
+void start_game(High_score* leaderboard, int level);
 
 //joystick_pos.c
 void joystickPin_config(void);

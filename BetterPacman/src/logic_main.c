@@ -72,15 +72,16 @@ extern volatile uint32_t x_pos;
 int scared_timer = 0;
 bool ghosts_scared = false;
 
-void start_game(High_score* head) {
+void start_game(High_score* head, int level) {
     lcd_fill_screen(COLOR_BLACK);
     load_background();
     int frames = 0;
     bool game_won = false;
     while (pacman.lives > 0 && game_won == false) {
-        nano_wait(15000000);
+        int wait = 15000000 - 4000000 * level;
+        if (wait < 0) wait = 0; 
+        nano_wait(wait);
 
-        // CHANGE TO DISPLAY LEADERBOARD - RIGHT HERE
         uint32_t score = pacman.score;
         clear_screen();
         show_leader_board_screen(head, score);
@@ -145,7 +146,7 @@ void start_game(High_score* head) {
         // load_gamewon();
         scared_timer = 0;
         memcpy(map, orig_map, sizeof(map));
-        start_game(head);
+        start_game(head, ++level);
     } else {
         load_gameover();
     }
