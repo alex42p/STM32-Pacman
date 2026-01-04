@@ -1,4 +1,14 @@
 #Create c array from raw data
+"""
+
+    @file: generate_audio_array.py
+    @author: Zoey Halligan
+
+    @description: 
+        Creates the C array to be used by the DAC 
+        for the audio of Pacman eating a pellet.
+
+"""
 
 import sys
 

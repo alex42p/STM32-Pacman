@@ -1,6 +1,2 @@
-# Project-Pacman-better
-Pacman but with better embedded engineers.
-
 # Project Description
-Our project aims to use the STM to construct timer and game logic to create an interactive Pacman replica with input via a joystick and keypad, with display shown on an LED matrix.
-
+This project uses the STM32 to construct timer and game logic to create an interactive Pacman replica with input via a joystick and keypad, with display shown on an LED matrix. High scores are stored in an on-board EEPROM chip to be loaded at the beginning of every game instance. Pacman's pellet-eating audio is converted from an MP3 file to a byte array that can be output via a speaker through a DAC.

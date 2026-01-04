@@ -1,6 +1,6 @@
 /**
  * 
- * @file: i2c.c
+ * @file: high_score.c
  * @author: Alex Piet
  * 
  * @description: 

@@ -1,3 +1,14 @@
+/**
+ * 
+ * @file: logic_main.c
+ * @author: Aahan Mehta
+ * 
+ * @description: 
+ *      This file creates the game map as well as the 
+ *      movement and interaction logic for each character.
+ * 
+ */
+
 #include "stm32f0xx.h"
 #include "decl.h"
 #include <stdio.h>

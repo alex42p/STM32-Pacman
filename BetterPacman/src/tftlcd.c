@@ -1,3 +1,13 @@
+/**
+ * 
+ * @file: tftlcd.c
+ * @author: Omkar Godke
+ * 
+ * @description: 
+ *      Sets up the logic for the LCD screen to display the game.
+ * 
+ */
+
 #include "stm32f0xx.h"
 #include "tftlcd.h"
 

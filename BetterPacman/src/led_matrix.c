@@ -1,3 +1,15 @@
+/**
+ * 
+ * @file: led_matrix.c
+ * @author: Omkar Godke
+ * 
+ * @description: 
+ *      This file holds the logic for lighting up the correct lights 
+ *      on our LED matrix to display current score, GAME OVER message, 
+ *      the leaderboard, and a new leaderboard entry.
+ * 
+ */
+
 #include "stm32f0xx.h"
 #include <string.h>
 #include "keypad.h"

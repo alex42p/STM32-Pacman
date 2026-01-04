@@ -1,3 +1,14 @@
+/**
+ * 
+ * @file: mp3_to_dac.c
+ * @author: Zoey Halligan, Alex Piet
+ * 
+ * @description: 
+ *      Converts the sound's byte array into actual audio 
+ *      that the DAC can output every time Pacman eats a pellet.
+ * 
+ */
+
 #include <stdint.h>
 #include <stdio.h>
 #include "stm32f0xx.h"

@@ -1,3 +1,13 @@
+/**
+ * 
+ * @file: pacman.c
+ * @author: Aahan Mehta
+ * 
+ * @description: 
+ *      This file holds the logic for the Pacman instance.
+ * 
+ */
+
 #include "decl.h"
 #include "stm32f0xx.h"
 #include <stdio.h>

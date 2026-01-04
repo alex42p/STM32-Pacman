@@ -1,3 +1,13 @@
+/**
+ * 
+ * @file: ghost.c
+ * @author: Aahan Mehta
+ * 
+ * @description: 
+ *      This file holds the logic for each Ghost instance.
+ * 
+ */
+
 #include "decl.h"
 #include "stm32f0xx.h"
 #include <stdlib.h>

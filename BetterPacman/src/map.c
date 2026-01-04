@@ -1,3 +1,12 @@
+/**
+ * 
+ * @file: map.c
+ * @author: Aahan Mehta
+ * 
+ * @description: 
+ *      Map file creates the game map.
+ * 
+ */
 #include "decl.h"
 
 void load_background(void) {
